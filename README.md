@@ -16,6 +16,7 @@ serverpilot_api_key="API KEY"
 
 ## Options
 Options can be used with commands to do different things.
+
 | Option   | Name     | Description
 | :------: | :------: | :---------------------------------------
 | `-f` | Force | Skips "Are you sure?" prompts. Used on all delete functions.
@@ -33,6 +34,7 @@ $ serverpilot -r servers
 
 # Find
 An added feature of this API wrapper is the `find` function.
+
 | Name   | Type     | Description
 | ------ | :------: | :---------------------------------------
 | `find` | `string` | A comma separated list of fields and values to search for. i.e: `name=www2` or `id=UXOSIYrdtL4cSGp3,firewall=true`

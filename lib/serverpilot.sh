@@ -200,7 +200,6 @@ function sp_actions {
 # Example: serverpilot servers
 # Example: serverpilot servers $serverid
 function sp_servers_get {
-  echo "$1"
   if [ "$1" ]; then
     local response=$(sp_run "servers/$1")
     local selector=".data"

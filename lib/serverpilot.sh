@@ -253,7 +253,6 @@ function sp_servers {
     "create") sp_servers_create "${@:2}";;
     "update") sp_servers_update "${@:2}";;
     "delete") sp_servers_delete "${@:2}";;
-    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
@@ -314,7 +313,6 @@ function sp_sysusers {
     "create") sp_sysusers_create "${@:2}";;
     "update") sp_sysusers_update "${@:2}";;
     "delete") sp_sysusers_delete "${@:2}";;
-    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
@@ -386,7 +384,6 @@ function sp_apps {
     "update") sp_apps_update "${@:2}";;
     "delete") sp_apps_delete "${@:2}";;
     "ssl") sp_apps_ssl "${@:2}";;
-    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
@@ -496,7 +493,6 @@ function sp_dbs {
     "create") sp_dbs_create "${@:2}";;
     "update") sp_dbs_update "${@:2}";;
     "delete") sp_dbs_delete "${@:2}";;
-    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 

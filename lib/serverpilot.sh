@@ -402,7 +402,7 @@ function sp_apps_ssl {
 # Database setup for sp_data_table function (Internal)
 # Example: sp_dbs_table "$response" "$selector"
 function sp_dbs_table {
-  local dbs=($(echo "$1" | jq -rc "$2 |= .+ {"userid":.user.id,"username":.user.name} | del($2.user) | $2"))
+  local o=($(echo "$1" | jq -rc "$2 |= .+ {"userid":.user.id,"username":.user.name} | del($2.user) | $2"))
   sp_data_table "${o[@]}"
 }
 

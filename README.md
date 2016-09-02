@@ -57,7 +57,7 @@ An added feature of this API wrapper is the `find` function.
 | `fields` | `string` | A comma separated list of fields to return. i.e: `id,name`
 This would list all apps on the "www2" server:
 ```
-serverpilot find apps "serverid=$(serverpilot find servers 'name=www2' 'id')"
+$ serverpilot find apps "serverid=$(serverpilot find servers 'name=www2' 'id')"
 ```
 
 # Resources

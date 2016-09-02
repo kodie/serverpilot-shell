@@ -17,7 +17,7 @@ function sp_run {
   if [ "$2" ]; then local d="-d "$2; fi
   if [ "$3" ]; then local X="-X "$3; fi
   local response=$(curl -s https://api.serverpilot.io/v1/$1 -u $serverpilot_client_id:$serverpilot_api_key -H "Content-Type: application/json" $d $X)
-  if [ ! "$response" ]; then response='{"error":{"message":"No response."}}'; fi
+  if [ ! "$response" ]; then response='{"error":{"message":"No response from ServerPilot."}}'; fi
   echo $response | tr '\n' ' '
 }
 
@@ -76,10 +76,23 @@ function sp_table {
   sp_data_table "${o[@]}"
 }
 
+# Checks if required args are set
+# Example: sp_args_check 1 "$@"
+function sp_args_check {
+  local a=("${@:2}")
+  local c="$1"
+  if [ "${#a[@]}" -lt "$c" ]; then
+    echo "Error: Missing required arguments."
+    exit 1
+  else
+    return 0
+  fi
+}
+
 # Wrap quotes around string args - Used when args are being used in JSON (Internal)
-# Example: set $(sp_quote_args "$@")
-# Example: set -- "${@:1:1}" $(sp_quote_args ""${@:2}"")
-function sp_quote_args {
+# Example: set $(sp_args_quote "$@")
+# Example: set -- "${@:1:1}" $(sp_args_quote ""${@:2}"")
+function sp_args_quote {
   local a=($@); local i;
   for i in "${!a[@]}"; do
     if [[ ${a[$i]} \
@@ -132,6 +145,7 @@ function sp_find_setup {
 # Example: serverpilot find apps 'serverid=$serverid,runtime=php7.0' "id,name"
 # Note: Does not obey the "-s (Silent)" option.
 function sp_find {
+  sp_args_check 1 "$@"
   local s=$(sp_find_setup "${@:2}")
   local response=$(sp_run "$1")
   local f=".data[] $s"
@@ -171,6 +185,7 @@ function sp_actions_wait {
 # Checks the status of an action id
 # Example: serverpilot actions $actionid
 function sp_actions {
+  sp_args_check 1 "$@"
   local response=$(sp_run "actions/$1")
   sp_data_check "$response"
 
@@ -202,7 +217,8 @@ function sp_servers_get {
 # Example: serverpilot server create $servername
 # Note: You will need to run the serverpilot-installer yourself. (https://github.com/ServerPilot/API#connect-a-new-server)
 function sp_servers_create {
-  set $(sp_quote_args "$@")
+  sp_args_check 1 "$@"
+  set $(sp_args_quote "$@")
   local response=$(sp_run "servers" '{"name":'$1'}')
   sp_data_check "$response"
 }
@@ -211,7 +227,8 @@ function sp_servers_create {
 # Example: serverpilot servers update $serverid firewall true
 # Example: serverpilot servers update $serverid autoupdates false
 function sp_servers_update {
-  set -- "${@:1:1}" $(sp_quote_args ""${@:2}"")
+  sp_args_check 3 "$@"
+  set -- "${@:1:1}" $(sp_args_quote ""${@:2}"")
   local response=$(sp_run "servers/$1" '{'$2':'$3'}')
   sp_data_check "$response"
 }
@@ -219,6 +236,8 @@ function sp_servers_update {
 # Deletes specified server
 # Example: serverpilot servers delete $serverid
 function sp_servers_delete {
+  sp_args_check 1 "$@"
+
   if [[ ! "$sp_options_force" == "true" && ! "$sp_options_silent" == "true" ]]; then
     read -p "You are aboute to delete server '$1'. This cannot be undone! Are you sure? " -n 1 -r && echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then break; else return; fi
@@ -235,6 +254,7 @@ function sp_servers {
     "create") sp_servers_create "${@:2}";;
     "update") sp_servers_update "${@:2}";;
     "delete") sp_servers_delete "${@:2}";;
+    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
@@ -258,7 +278,8 @@ function sp_sysusers_get {
 # Example: serverpilot sysusers create $serverid $name $password
 # Note: "password" field is optional. If user has no password, they will not be able to log in with a password.
 function sp_sysusers_create {
-  set $(sp_quote_args "$@")
+  sp_args_check 2 "$@"
+  set $(sp_args_quote "$@")
   if [ "$3" ]; then local p=',"password":'$3; fi
   local response=$(sp_run "sysusers" '{"serverid":'$1',"name":'$2$p'}')
   sp_data_check "$response"
@@ -267,7 +288,8 @@ function sp_sysusers_create {
 # Updates specified system user's info
 # Example: serverpilot sysusers update $sysuserid password $password
 function sp_sysusers_update {
-  set -- "${@:1:1}" $(sp_quote_args ""${@:2}"")
+  sp_args_check 3 "$@"
+  set -- "${@:1:1}" $(sp_args_quote ""${@:2}"")
   local response=$(sp_run "sysusers/$1" '{'$2':'$3'}')
   sp_data_check "$response"
 }
@@ -275,6 +297,8 @@ function sp_sysusers_update {
 # Deletes specified system user
 # Example: serverpilot sysusers delete $sysuserid
 function sp_sysusers_delete {
+  sp_args_check 1 "$@"
+
   if [[ ! "$sp_options_force" == "true" && ! "$sp_options_silent" == "true" ]]; then
     read -p "You are aboute to delete system user '$1'. This cannot be undone! Are you sure? " -n 1 -r && echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then break; else return; fi
@@ -291,6 +315,7 @@ function sp_sysusers {
     "create") sp_sysusers_create "${@:2}";;
     "update") sp_sysusers_update "${@:2}";;
     "delete") sp_sysusers_delete "${@:2}";;
+    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
@@ -322,7 +347,8 @@ function sp_apps_get {
 # Example: serverpilot apps create $name $sysuserid $runtime '["domain.com", "www.domain.com"]' '$wordpressObj'
 # Note: "domains" and "wordpress" fields are optional.
 function sp_apps_create {
-  set $(sp_quote_args "$@")
+  sp_args_check 3 "$@"
+  set $(sp_args_quote "$@")
   if [ "$4" ]; then local d=',"domains":'$4''; fi
   if [ "$5" ]; then local w=',"wordpress":'$5''; fi
   local response=$(sp_run "apps" '{"name":'$1',"sysuserid":'$2',"runtime":'$3$d$w'}')
@@ -333,7 +359,8 @@ function sp_apps_create {
 # Example: serverpilot apps update $appid runtime $runtime
 # Example: serverpilot apps update $appid domains "[$domain1, $domain2]"
 function sp_apps_update {
-  set -- "${@:1:1}" $(sp_quote_args ""${@:2}"")
+  sp_args_check 3 "$@"
+  set -- "${@:1:1}" $(sp_args_quote ""${@:2}"")
   local response=$(sp_run "apps/$1" '{'$2':'$3'}')
   sp_data_check "$response"
 }
@@ -341,6 +368,8 @@ function sp_apps_update {
 # Deletes specified app
 # Example: serverpilot apps delete $appid
 function sp_apps_delete {
+  sp_args_check 1 "$@"
+
   if [[ ! "$sp_options_force" == "true" && ! "$sp_options_silent" == "true" ]]; then
     read -p "You are aboute to delete app '$1'. This cannot be undone! Are you sure? " -n 1 -r && echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then break; else return; fi
@@ -353,18 +382,20 @@ function sp_apps_delete {
 # Namespace function for apps - Defaults to listing apps
 function sp_apps {
   case "$1" in
+    "") sp_apps_get "${@:2}";;
     "create") sp_apps_create "${@:2}";;
     "update") sp_apps_update "${@:2}";;
     "delete") sp_apps_delete "${@:2}";;
     "ssl") sp_apps_ssl "${@:2}";;
-    "") sp_apps_get "${@:2}";;
+    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
 # Adds an SSL certificate to an app
 # Example: serverpilot apps ssl add $appid $key $cert $cacerts
 function sp_apps_ssl_add {
-  set -- "${@:1:1}" $(sp_quote_args ""${@:2}"")
+  sp_args_check 4 "$@"
+  set -- "${@:1:1}" $(sp_args_quote ""${@:2}"")
   local response=$(sp_run "apps/$1/ssl" '{"key":'$2',"cert":'$3',"cacerts":'$4'}')
   sp_data_check "$response"
 }
@@ -373,7 +404,8 @@ function sp_apps_ssl_add {
 # Example: serverpilot apps ssl update $appid auto true
 # Example: serverpilot apps ssl update $appid force false
 function sp_apps_ssl_update {
-  set -- "${@:1:1}" $(sp_quote_args ""${@:2}"")
+  sp_args_check 3 "$@"
+  set -- "${@:1:1}" $(sp_args_quote ""${@:2}"")
   local response=$(sp_run "apps/$1/ssl" '{'$2':'$3'}')
   sp_data_check "$response"
 }
@@ -381,6 +413,8 @@ function sp_apps_ssl_update {
 # Deletes custom SSL certificate or disables Auto SSL for specified app
 # Example: serverpilot apps ssl delete $appid
 function sp_apps_ssl_delete {
+  sp_args_check 1 "$@"
+
   if [[ ! "$sp_options_force" == "true" && ! "$sp_options_silent" == "true" ]]; then
     read -p "You are aboute to delete the SSL certificate for app '$1'. This cannot be undone! Are you sure? " -n 1 -r && echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then break; else return; fi
@@ -396,6 +430,7 @@ function sp_apps_ssl {
     "add") sp_apps_ssl_add "${@:2}";;
     "update") sp_apps_ssl_update "${@:2}";;
     "delete") sp_apps_ssl_delete "${@:2}";;
+    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
@@ -426,7 +461,8 @@ function sp_dbs_get {
 # Creates an database
 # Example: serverpilot dbs create $appid $dbname $dbuser $dbpass
 function sp_dbs_create {
-  set $(sp_quote_args "$@")
+  sp_args_check 4 "$@"
+  set $(sp_args_quote "$@")
   local response=$(sp_run "dbs" '{"appid":'$1',"name":'$2',"user":{"name":'$3',"password":'$4'}}')
   sp_data_check "$response"
 }
@@ -434,7 +470,8 @@ function sp_dbs_create {
 # Updates specified db's password
 # Example: serverpilot dbs update $dbid $dbuserid $newdbpass
 function sp_dbs_update {
-  set -- "${@:1:1}" $(sp_quote_args ""${@:2}"")
+  sp_args_check 3 "$@"
+  set -- "${@:1:1}" $(sp_args_quote ""${@:2}"")
   local response=$(sp_run "dbs/$1" '{user":{"id":'$2',"password":'$3'}}')
   sp_data_check "$response"
 }
@@ -442,6 +479,8 @@ function sp_dbs_update {
 # Deletes specified database
 # Example: serverpilot dbs delete $dbid
 function sp_dbs_delete {
+  sp_args_check 1 "$@"
+
   if [[ ! "$sp_options_force" == "true" && ! "$sp_options_silent" == "true" ]]; then
     read -p "You are aboute to delete database '$1'. This cannot be undone! Are you sure? " -n 1 -r && echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then break; else return; fi
@@ -454,10 +493,11 @@ function sp_dbs_delete {
 # Namespace function for databases - Defaults to listing databases
 function sp_dbs {
   case "$1" in
+    "") sp_dbs_get "${@:2}";;
     "create") sp_dbs_create "${@:2}";;
     "update") sp_dbs_update "${@:2}";;
     "delete") sp_dbs_delete "${@:2}";;
-    "") sp_dbs_get "${@:2}";;
+    *) echo "Error: Invalid command." >&2; exit 1;;
   esac
 }
 
@@ -477,19 +517,20 @@ function serverpilot {
   while getopts $options option
   do
     case $option in
-      f  ) sp_options_force=true;;
-      r  ) sp_options_raw=true;;
-      s  ) sp_options_silent=true;;
-      w  ) sp_options_wait=true;;
-      \? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
-      :  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
-      *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
+      "f") sp_options_force=true;;
+      "r") sp_options_raw=true;;
+      "s") sp_options_silent=true;;
+      "w") sp_options_wait=true;;
+      \?) exit 1;;
+      :) exit 1;;
+      *) exit 1;;
     esac
   done
   shift $(($OPTIND - 1))
 
   case "$1" in
     "find") sp_find "${@:2}";;
+    "actions") sp_actions "${@:2}";;
     "servers") sp_servers "${@:2}";;
     "sysusers") sp_sysusers "${@:2}";;
     "apps") sp_apps "${@:2}";;

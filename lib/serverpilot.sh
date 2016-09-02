@@ -200,6 +200,7 @@ function sp_actions {
 # Example: serverpilot servers
 # Example: serverpilot servers $serverid
 function sp_servers_get {
+  echo "$1"
   if [ "$1" ]; then
     local response=$(sp_run "servers/$1")
     local selector=".data"
@@ -249,10 +250,10 @@ function sp_servers_delete {
 # Namespace function for servers - Defaults to listing servers
 function sp_servers {
   case "$1" in
-    "") sp_servers_get "${@:2}";;
     "create") sp_servers_create "${@:2}";;
     "update") sp_servers_update "${@:2}";;
     "delete") sp_servers_delete "${@:2}";;
+    *) sp_servers_get "${@:1}";;
   esac
 }
 
@@ -309,10 +310,10 @@ function sp_sysusers_delete {
 # Namespace function for system users - Defaults to listing system users
 function sp_sysusers {
   case "$1" in
-    "") sp_sysusers_get "${@:2}";;
     "create") sp_sysusers_create "${@:2}";;
     "update") sp_sysusers_update "${@:2}";;
     "delete") sp_sysusers_delete "${@:2}";;
+    *) sp_sysusers_get "${@:1}";;
   esac
 }
 
@@ -379,11 +380,11 @@ function sp_apps_delete {
 # Namespace function for apps - Defaults to listing apps
 function sp_apps {
   case "$1" in
-    "") sp_apps_get "${@:2}";;
     "create") sp_apps_create "${@:2}";;
     "update") sp_apps_update "${@:2}";;
     "delete") sp_apps_delete "${@:2}";;
     "ssl") sp_apps_ssl "${@:2}";;
+    *) sp_apps_get "${@:1}";;
   esac
 }
 
@@ -489,10 +490,10 @@ function sp_dbs_delete {
 # Namespace function for databases - Defaults to listing databases
 function sp_dbs {
   case "$1" in
-    "") sp_dbs_get "${@:2}";;
     "create") sp_dbs_create "${@:2}";;
     "update") sp_dbs_update "${@:2}";;
     "delete") sp_dbs_delete "${@:2}";;
+    *) sp_dbs_get "${@:1}";;
   esac
 }
 

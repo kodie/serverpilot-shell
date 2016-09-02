@@ -14,6 +14,22 @@ serverpilot_client_id="CLIENT ID"
 serverpilot_api_key="API KEY"
 ```
 
+## Installation
+Replace `CLIENT ID` and `API KEY`, then run the following two commands:
+
+```
+$ curl -sSL https://rawgit.com/kodie/serverpilot-shell/master/lib/serverpilot.sh > /usr/local/bin/serverpilot && chmod a+x /usr/local/bin/serverpilot
+$ a="CLIENT ID"; b="API KEY"; printf 'export serverpilot_client_id="'$a'"\nexport serverpilot_api_key="'$b'"' >> ~/.bash_profile && source ~/.bash_profile
+```
+
+The first command will download `serverpilot.sh` to `/usr/local/bin/serverpilot` and make it executable.
+
+The second command will set the `serverpilot_client_id` and `serverpilot_api_key` variables in your `~/.bash_profile` file.
+
+To test for a successful installation, just run `serverpilot servers`.
+
+To update to the latest version at any time, just run the first command again.
+
 ## Options
 Options can be used with commands to do different things.
 
@@ -41,9 +57,7 @@ An added feature of this API wrapper is the `find` function.
 | `fields` | `string` | A comma separated list of fields to return. i.e: `id,name`
 This would list all apps on the "www2" server:
 ```
-servername="www2"
-serverid=$(serverpilot find servers "name=$servername" "id")
-$ serverpilot find apps "serverid=$serverid"
+serverpilot find apps "serverid=$(serverpilot find servers 'name=www2' 'id')"
 ```
 
 # Resources

@@ -81,11 +81,10 @@ function sp_table {
 function sp_args_check {
   local a=("${@:2}")
   local c="$1"
+
   if [ "${#a[@]}" -lt "$c" ]; then
     echo "Error: Missing required arguments."
     exit 1
-  else
-    return 0
   fi
 }
 

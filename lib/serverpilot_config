@@ -1,2 +1,2 @@
-serverpilot_client_id="CLIENT ID"
-serverpilot_api_key="API KEY"
+export serverpilot_client_id="CLIENT ID"
+export serverpilot_api_key="API KEY"

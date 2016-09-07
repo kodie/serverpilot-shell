@@ -10,8 +10,8 @@ Manage your [ServerPilot](https://serverpilot.io) servers, system users, apps, a
 ## Authentication
 Set the following variables to your credentials. If these variables are not set when the script is loaded, it will look for them in the "serverpilot_config" file.
 ```
-serverpilot_client_id="CLIENT ID"
-serverpilot_api_key="API KEY"
+export serverpilot_client_id="CLIENT ID"
+export serverpilot_api_key="API KEY"
 ```
 
 ## Installation

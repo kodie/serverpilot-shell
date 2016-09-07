@@ -530,7 +530,7 @@ function serverpilot {
     "sysusers") sp_sysusers "${@:2}";;
     "apps") sp_apps "${@:2}";;
     "dbs") sp_dbs "${@:2}";;
-    *) echo "ServerPilot API Shell Wrapper by Kodie Grantham" >&2; exit 1;;
+    *) echo "ServerPilot API Shell Wrapper by Kodie Grantham"; exit 0;;
   esac
 }
 

@@ -19,7 +19,7 @@ Replace `CLIENT ID` and `API KEY`, then run the following two commands:
 
 ```
 $ curl -sSL https://rawgit.com/kodie/serverpilot-shell/master/lib/serverpilot.sh > /usr/local/bin/serverpilot && chmod a+x /usr/local/bin/serverpilot
-$ a="CLIENT ID"; b="API KEY"; printf 'export serverpilot_client_id="'$a'"\nexport serverpilot_api_key="'$b'"' >> ~/.bash_profile && source ~/.bash_profile
+$ a="CLIENT ID"; b="API KEY"; printf '\nexport serverpilot_client_id="'$a'"\nexport serverpilot_api_key="'$b'"' >> ~/.bash_profile && source ~/.bash_profile
 ```
 
 The first command will download `serverpilot.sh` to `/usr/local/bin/serverpilot` and make it executable.

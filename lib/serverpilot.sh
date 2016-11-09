@@ -25,7 +25,7 @@ function sp_run {
 # Example: sp_data_check "$response"
 function sp_data_check {
   if [ "$sp_options_wait" == "true" ]; then
-    local actionid="$(echo "$1" | jq -rc ".actionid")"
+    local actionid="$(echo "$1" | jq -r -c ".actionid")"
     if [[ "$actionid" && ! "$actionid" == "null" ]]; then
       sp_actions_wait "$actionid"
     fi
@@ -34,7 +34,7 @@ function sp_data_check {
   if [[ "$sp_options_raw" == "true" && ! "$sp_options_silent" == "true" ]]; then
     echo $1
     exit 0
-  elif [ ! "${error=$(echo "$1" | jq -rc ".error.message")}" == "null" ]; then
+  elif [ ! "${error=$(echo "$1" | jq -r -c ".error.message")}" == "null" ]; then
     if [ ! "$sp_options_silent" == "true" ]; then
       echo "Error: $error" >&2
     fi
@@ -72,7 +72,7 @@ function sp_data_table {
 # Default setup for sp_data_table function (Internal)
 # Example: sp_table "$response" "$selector"
 function sp_table {
-  local o=($(echo "$1" | jq -rc "$2"))
+  local o=($(echo "$1" | jq -r -c "$2"))
   sp_data_table "${o[@]}"
 }
 
@@ -153,7 +153,7 @@ function sp_find {
     f="{data:[.data[] $s]}"
   fi
 
-  local results=$(echo "$response" | jq -rc "$f")
+  local results=$(echo "$response" | jq -r -c "$f")
 
   if [[ ! "$3" && ! "$sp_options_raw" == "true" ]]; then
     case "$1" in
@@ -188,7 +188,7 @@ function sp_actions {
   local response=$(sp_run "actions/$1")
   sp_data_check "$response"
 
-  local status=$(echo "$response" | jq -rc ".data.status")
+  local status=$(echo "$response" | jq -r -c ".data.status")
   case $status in
     "success") echo "The action '$1' has completed successfully.";;
     "open") echo "The action '$1' has not completed yet.";;
@@ -319,7 +319,7 @@ function sp_sysusers {
 # Apps setup for sp_data_table function (Internal)
 # Example: sp_apps_table "$response" "$selector"
 function sp_apps_table {
-  local o=($(echo "$1" | jq -rc "$2 | del(.ssl) | del(.domains)"))
+  local o=($(echo "$1" | jq -r -c "$2 | del(.ssl) | del(.domains)"))
   sp_data_table "${o[@]}"
 }
 
@@ -433,7 +433,7 @@ function sp_apps_ssl {
 # Database setup for sp_data_table function (Internal)
 # Example: sp_dbs_table "$response" "$selector"
 function sp_dbs_table {
-  local o=($(echo "$1" | jq -rc "$2 |= .+ {"userid":.user.id,"username":.user.name} | del($2.user) | $2"))
+  local o=($(echo "$1" | jq -r -c "$2 |= .+ {"userid":.user.id,"username":.user.name} | del($2.user) | $2"))
   sp_data_table "${o[@]}"
 }
 

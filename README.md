@@ -5,7 +5,7 @@ Manage your [ServerPilot](https://serverpilot.io) servers, system users, apps, a
 
 ## Requirements
 * [Curl](https://github.com/curl/curl)
-* [jq](https://github.com/stedolan/jq)
+* [jq](https://github.com/stedolan/jq) (version 1.5 or later)
 
 ## Authentication
 Set the following variables to your credentials. If these variables are not set when the script is loaded, it will look for them in the "serverpilot_config" file.

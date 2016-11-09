@@ -56,7 +56,7 @@ function sp_data_split {
 # Displays data in a nice table (Internal)
 # Example: sp_data_table "${data[@]}"
 function sp_data_table {
-  local keys=($(echo "${@:0:1}" | jq -r ". | keys_unsorted | .[]"))
+  local keys=($(echo "$1" | jq -r ". | keys_unsorted | .[]"))
   COLUMNS=100
   printf "%-20s" ${keys[@]}
   echo

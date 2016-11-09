@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ServerPilot API Shell Wrapper
 # by Kodie Grantham (http://kodieg.com)

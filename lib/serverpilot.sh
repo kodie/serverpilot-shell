@@ -4,6 +4,8 @@
 # by Kodie Grantham (http://kodieg.com)
 # https://github.com/kodie/serverpilot-shell
 
+sp_version="1.0.2"
+
 # Check if api creds have been set. If not, check if they're in the config file.
 if [[ ! "$serverpilot_client_id" || ! "$serverpilot_api_key" ]]; then
   if [ -e "serverpilot_config" ]; then
@@ -501,7 +503,14 @@ function serverpilot {
     "sysusers") sp_sysusers "${@:2}";;
     "apps") sp_apps "${@:2}";;
     "dbs") sp_dbs "${@:2}";;
-    *) echo "ServerPilot API Shell Wrapper by Kodie Grantham"; exit 0;;
+    *)
+      echo
+      echo "ServerPilot API Shell Wrapper v$sp_version"
+      echo "by Kodie Grantham - http://kodieg.com"
+      echo
+      echo "GitHub: https://github.com/kodie/serverpilot-shell"
+      echo
+      exit 0;;
   esac
 }
 

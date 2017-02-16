@@ -8,7 +8,7 @@ Manage your [ServerPilot](https://serverpilot.io) servers, system users, apps, a
 * [jq](https://github.com/stedolan/jq) (version 1.5 or later)
 
 ## Authentication
-Set the following variables to your credentials. If these variables are not set when the script is loaded, it will look for them in the "serverpilot_config" file.
+Set the following variables to your credentials. If these variables are not set when the script is loaded, it will look for them in the "serverpilot_config" file which can either be located in the same directory as the script or in your home directory.
 ```
 export serverpilot_client_id="CLIENT ID"
 export serverpilot_api_key="API KEY"

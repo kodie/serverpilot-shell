@@ -8,8 +8,12 @@ sp_version="1.0.2"
 
 # Check if api creds have been set. If not, check if they're in the config file.
 if [[ ! "$serverpilot_client_id" || ! "$serverpilot_api_key" ]]; then
-  if [ -e "serverpilot_config" ]; then
-    . "serverpilot_config"
+  sp_config_filename="serverpilot_config"
+
+  if [ -e "$sp_config_filename" ]; then
+    . "$sp_config_filename"
+  elif [ -e "$HOME/$sp_config_filename" ]; then
+    . "$HOME/$sp_config_filename"
   fi
 fi
 

@@ -319,7 +319,7 @@ function sp_sysusers {
 # Apps setup for sp_data_table function (Internal)
 # Example: sp_apps_table "$response" "$selector"
 function sp_apps_table {
-  local o=($(echo "$1" | jq -r -c "$2 | del(.ssl) | del(.domains)"))
+  local o=($(echo "$1" | jq -r -c "$2 | del(.ssl) | del(.autossl) | del(.domains)"))
   sp_data_table "${o[@]}"
 }
 

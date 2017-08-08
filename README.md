@@ -35,10 +35,10 @@ Options can be used with commands to do different things.
 
 | Option   | Name     | Description
 | :------: | :------: | :---------------------------------------
-| `-f` | Force | Skips "Are you sure?" prompts. Used on all delete functions.
-| `-r` | Raw | Returns raw JSON response instead of user friendly text. Used on all functions that return a response.
-| `-s` | Silent | Returns nothing. Used on all functions that return a response. Takes priorty over "raw" option and enables "force" option.
-| `-w` | Wait | Waits for action to complete before finishing. Used on all functions that return an action id.
+| `-f` | Force | Skips "Are you sure?" prompts. Used on all delete functions. |
+| `-r` | Raw | Returns raw JSON response instead of user friendly text. Used on all functions that return a response. |
+| `-s` | Silent | Returns nothing. Used on all functions that return a response. Takes priorty over "raw" option and enables "force" option. |
+| `-w` | Wait | Waits for action to complete before finishing. Used on all functions that return an action id. |
 This would delete the system user without prompt and would wait for the action to complete before finishing:
 ```
 $ serverpilot -f -w sysusers delete PPkfc1NECzvwiEBI

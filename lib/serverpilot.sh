@@ -381,7 +381,7 @@ function sp_apps_ssl_add {
 # Example: serverpilot apps ssl update $appid force false
 function sp_apps_ssl_update {
   sp_args_check 3 "$@"
-  local response=$(sp_run "apps/$1/ssl" "{\"$2\":\"$3\"}")
+  local response=$(sp_run "apps/$1/ssl" "{\"$2\":$3}")
   sp_data_check "$response"
 }
 

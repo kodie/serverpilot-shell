@@ -1,3 +1,6 @@
+## v1.0.3 (4/17/2018)
+* Fixed SSL update bug [PR #5](https://github.com/kodie/serverpilot-shell/pull/5)
+
 ## v1.0.2 (2/16/2017)
 * Fixed [Issue #2](https://github.com/kodie/serverpilot-shell/issues/2)
 * Fixed [Issue #3](https://github.com/kodie/serverpilot-shell/issues/3)

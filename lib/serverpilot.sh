@@ -4,7 +4,7 @@
 # by Kodie Grantham (http://kodieg.com)
 # https://github.com/kodie/serverpilot-shell
 
-sp_version="1.0.2"
+sp_version="1.0.3"
 
 # Check if api creds have been set. If not, check if they're in the config file.
 if [[ ! "$serverpilot_client_id" || ! "$serverpilot_api_key" ]]; then

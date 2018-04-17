@@ -56,6 +56,7 @@ An added feature of this API wrapper is the `find` function.
 | ------ | :------: | :---------------------------------------
 | `find` | `string` | A comma separated list of fields and values to search for. i.e: `name=www2` or `id=UXOSIYrdtL4cSGp3,firewall=true`
 | `fields` | `string` | A comma separated list of fields to return. i.e: `id,name`
+
 This would list all apps on the "www2" server:
 ```
 $ serverpilot find apps serverid=$(serverpilot find servers name=www2 id)
